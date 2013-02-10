@@ -1,0 +1,5 @@
+Project ideas:
+Numerics software
+Some strategy game
+Chat client
+3D Multiplayer game
