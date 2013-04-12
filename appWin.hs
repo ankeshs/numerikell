@@ -18,13 +18,17 @@ main = do
     varHist <- builderGetObject builder castToTextView "varHist"
     inp <- builderGetObject builder castToEntry "inp"
     exitMenu <- builderGetObject builder castToMenuItem "exitMenu"
-    
+    viewVars <- builderGetObject builder castToCheckMenuItem "viewVars"
+    viewCmds <- builderGetObject builder castToCheckMenuItem "viewCmds"
+    varBox <- builderGetObject builder castToVBox "varBox"
+    cmdBox <- builderGetObject builder castToVBox "cmdBox"    
+        
     --Setting Properties and initializations
     textViewSetEditable terminal False
     textViewSetEditable cmdHist False
     textViewSetEditable varHist False
     buf <- textViewGetBuffer terminal
-    cbuf <- textViewGetBuffer cmdHist    
+    cbuf <- textViewGetBuffer cmdHist
     textBufferSetText buf ">> "
     ei <- textBufferGetEndIter buf
     em <- textBufferCreateMark buf Nothing ei False    
@@ -35,6 +39,12 @@ main = do
 	 putStrLn "Exit Request"
 	 mainQuit
 	 
+    on viewVars checkMenuItemToggled $ do
+	 putStrLn "Variable View Toggled"
+	 
+    on viewCmds checkMenuItemToggled $ do
+	 putStrLn "Command View Toggled"
+    
     afterEntryActivate inp $ do
 	 command <- entryGetText inp
 	 putStrLn command
