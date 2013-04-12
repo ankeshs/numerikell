@@ -3,6 +3,7 @@ module Main where
 import Graphics.UI.Gtk
 import Graphics.UI.Gtk.Glade
 import Graphics.UI.Gtk.Builder
+import Language.Haskell.Interpreter
 
 main = do
     initGUI
@@ -33,9 +34,8 @@ main = do
 	 command <- entryGetText inp
 	 putStrLn command
 	 result <- return (getResult command)
-	 putStrLn result
 	 entrySetText inp ""	 
-	 textBufferInsert buf ei (command ++ "\n" ++ result ++ "\n>> ")		 	 	 
+	 textBufferInsert buf ei (command ++ "\n" ++ show (result) ++ "\n>> ")		 	 	 
 	 scstate <- textViewScrollToMark terminal em 0.0 Nothing
 	 textBufferInsert cbuf cei (command ++ "\n")
 	 updateVars varHist
@@ -46,7 +46,7 @@ main = do
     
 --Takes the command entered and returns output, may additionally take environment with variables
 getResult :: String -> String
-getResult _ = "Result unknown"
+getResult str = "Result Unknown"
 
 --Code to be modified to keep track of changing variables
 updateVars vh = do
