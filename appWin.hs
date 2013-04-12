@@ -16,7 +16,8 @@ main = do
     terminal <- builderGetObject builder castToTextView "terminal"
     cmdHist <- builderGetObject builder castToTextView "cmdHist"
     varHist <- builderGetObject builder castToTextView "varHist"
-    inp <- builderGetObject builder castToEntry "inp"    
+    inp <- builderGetObject builder castToEntry "inp"
+    exitMenu <- builderGetObject builder castToMenuItem "exitMenu"
     
     --Setting Properties and initializations
     textViewSetEditable terminal False
@@ -30,6 +31,10 @@ main = do
     cei <- textBufferGetEndIter cbuf
     
     --Events
+    afterActivateLeaf exitMenu $ do
+	 putStrLn "Exit Request"
+	 mainQuit
+	 
     afterEntryActivate inp $ do
 	 command <- entryGetText inp
 	 putStrLn command
