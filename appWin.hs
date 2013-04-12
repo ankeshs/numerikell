@@ -4,6 +4,7 @@ import Graphics.UI.Gtk
 import Graphics.UI.Gtk.Glade
 import Graphics.UI.Gtk.Builder
 import Language.Haskell.Interpreter
+import About
 
 main = do
     initGUI
@@ -22,6 +23,7 @@ main = do
     viewCmds <- builderGetObject builder castToCheckMenuItem "viewCmds"
     varBox <- builderGetObject builder castToVBox "varBox"
     cmdBox <- builderGetObject builder castToVBox "cmdBox"    
+    aboutMenu <- builderGetObject builder castToMenuItem "aboutMenu"
         
     --Setting Properties and initializations
     textViewSetEditable terminal False
@@ -44,6 +46,9 @@ main = do
 	 
     on viewCmds checkMenuItemToggled $ do
 	 putStrLn "Command View Toggled"
+	 
+    afterActivateLeaf aboutMenu $ do
+	 makeAboutDialog
     
     afterEntryActivate inp $ do
 	 command <- entryGetText inp
