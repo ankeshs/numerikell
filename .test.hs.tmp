@@ -28,7 +28,7 @@ main = do
    Model.treeViewAppendColumn treeview col
    tree <- Model.treeViewGetSelection treeview
    Model.treeSelectionSetMode tree  SelectionSingle
-   Model.onSelectionChanged tree (oneSelection list tree)
+   Model.onSelectionChanged treeview (oneSelection list tree)
    set window [ windowDefaultWidth := 100
                , windowDefaultHeight := 200
                , containerChild := treeview

@@ -1,4 +1,4 @@
-module About (makeAboutDialog) where
+module About where
 
 import Graphics.UI.Gtk
 import Graphics.UI.Gtk.Glade

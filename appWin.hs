@@ -24,6 +24,7 @@ main = do
     varBox <- builderGetObject builder castToVBox "varBox"
     cmdBox <- builderGetObject builder castToVBox "cmdBox"    
     aboutMenu <- builderGetObject builder castToMenuItem "aboutMenu"
+    plotMenu <- builderGetObject builder castToMenuItem "plotMenu"
         
     --Setting Properties and initializations
     textViewSetEditable terminal False
@@ -49,6 +50,9 @@ main = do
 	 
     afterActivateLeaf aboutMenu $ do
 	 makeAboutDialog
+    
+    afterActivateLeaf plotMenu $ do
+         putStrLn "Plot Requested"
     
     afterEntryActivate inp $ do
 	 command <- entryGetText inp
