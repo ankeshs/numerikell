@@ -3,7 +3,6 @@ module Main where
 import Graphics.UI.Gtk
 import Graphics.UI.Gtk.Glade
 import Graphics.UI.Gtk.Builder
-import Language.Haskell.Interpreter
 import About
 
 main = do
@@ -51,6 +50,9 @@ main = do
     afterActivateLeaf aboutMenu $ do
 	 makeAboutDialog
     
+    afterActivateLeaf plotMenu $ do
+         putStrLn "Plot Requested"
+    
     afterEntryActivate inp $ do
 	 command <- entryGetText inp
 	 putStrLn command
@@ -58,8 +60,9 @@ main = do
 	 entrySetText inp ""	 
 	 textBufferInsert buf ei (command ++ "\n" ++ show (result) ++ "\n>> ")		 	 	 
 	 scstate <- textViewScrollToMark terminal em 0.0 Nothing
-	 textBufferInsert cbuf cei (command ++ "\n")
-	 updateVars varHist
+	 textBufferInsert cbuf cei (command ++ "\n")	 
+	 updateVars varHist	 	 
+	 
     onDestroy appWindow mainQuit
     
     widgetShowAll appWindow

@@ -192,16 +192,6 @@ Satyendra Patel</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkCheckMenuItem" id="viewVars">
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Variables</property>
-                        <property name="use_underline">True</property>
-                        <property name="active">True</property>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkCheckMenuItem" id="viewCmds">
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
@@ -209,6 +199,24 @@ Satyendra Patel</property>
                         <property name="label" translatable="yes">Commands</property>
                         <property name="use_underline">True</property>
                         <property name="active">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="clrCmd">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Clear Command History</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuItem" id="clrTer">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Clear Terminal</property>
+                        <property name="use_underline">True</property>
                       </object>
                     </child>
                   </object>
@@ -461,7 +469,7 @@ Satyendra Patel</property>
                             <property name="hscrollbar_policy">automatic</property>
                             <property name="vscrollbar_policy">automatic</property>
                             <child>
-                              <object class="GtkTextView" id="cmdHist">
+                              <object class="GtkTreeView" id="cmdHist">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                               </object>
