@@ -1,0 +1,17 @@
+Project Topic:
+
+Development of a mathematical toolbox and associated scripting language in haskell (similar to Octave, but will try to use functional programming concepts for efficient implementation).
+Functionalities:
+
+    Plotting functions (line graphs, surface and contour diagrams)
+    Root finding (for polynomials and general functions by NR, bisection and other algorithms)
+    Solving a system of multivariable equations, eigen value problems, determinants, Gauss elimination, LU decomposition etc
+    Symbolic differentiation of functions, symbolic integration
+    Logical deductions and stat solver
+    Numerical solutions to derivatives, intergrals and ODEs
+
+Further, time permitting:
+
+    Optimization problems (LP and NLP)
+    Fourier Transforms
+    Numerical solution to PDEs
