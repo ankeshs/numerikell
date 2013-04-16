@@ -1,1 +1,4 @@
 import Data.List
+num=10
+w=num/2
+sin w

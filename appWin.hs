@@ -6,6 +6,7 @@ import Graphics.UI.Gtk.Builder
 import About
 import History
 import Interface
+import Plot
 import Graphics.UI.Gtk.ModelView as Model
 import Data.List as DataList
 import System.Process
@@ -66,6 +67,7 @@ main = do
     
     afterActivateLeaf plotMenu $ do
          putStrLn "Plot Requested" 
+         plotComp
          
     afterActivateLeaf clrCmd $ do
          listStoreClear cmdList

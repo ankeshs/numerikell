@@ -1,0 +1,44 @@
+module Plot where
+
+import Interface
+import Data.List as DataList
+import System.Process
+import System.IO.Strict as Strict
+import System.IO
+import Data.String.Utils
+import Graphics.UI.Gtk
+import Graphics.UI.Gtk.Glade
+import Graphics.UI.Gtk.Builder
+
+plotComp = do
+    initGUI
+    builder <- builderNew
+    builderAddFromFile builder "plotWin.glade"
+    
+    plotWindow <- builderGetObject builder castToWindow "plotWindow"
+    func <- builderGetObject builder castToEntry "func"
+    vals <- builderGetObject builder castToEntry "vals"
+    title <- builderGetObject builder castToEntry "title"
+    xLab <- builderGetObject builder castToEntry "xLab"
+    yLab <- builderGetObject builder castToEntry "yLab"
+    plotBut <- builderGetObject builder castToButton "plotBut"
+    logg <- builderGetObject builder castToEntry "log"
+    
+    afterClicked plotBut $ do
+        t <- entryGetText title
+        x <- entryGetText xLab
+        y <- entryGetText yLab
+        attr <- return $ "[Title \"" ++ t ++"\" , XLabel \"" ++ x ++ "\" , YLabel \"" ++ y ++"\" ]"
+        f <- entryGetText func
+        v <- entryGetText vals
+        plotter f v attr
+        err <- getError
+        entrySetText logg err
+        
+    onDestroy plotWindow mainQuit
+    widgetShowAll plotWindow
+    mainGUI
+
+plotter func vals opt = do
+    writeFile "tmp/proc.hs" ("import Graphics.Gnuplot.Simple\nimport Data.List\nmain = plotFunc " ++ opt ++ " ( ("++ vals ++ ") ::[Float]) " ++ func)
+    doProcess
