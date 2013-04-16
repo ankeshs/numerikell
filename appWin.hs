@@ -31,6 +31,8 @@ main = do
     viewCmds <- builderGetObject builder castToCheckMenuItem "viewCmds"
     clrCmd <- builderGetObject builder castToMenuItem "clrCmd"
     clrTer <- builderGetObject builder castToMenuItem "clrTer"
+    clrVar <- builderGetObject builder castToMenuItem "clrVar"
+    clrImp <- builderGetObject builder castToMenuItem "clrimp"
     varBox <- builderGetObject builder castToVBox "varBox"
     cmdBox <- builderGetObject builder castToVBox "cmdBox"    
     aboutMenu <- builderGetObject builder castToMenuItem "aboutMenu"
@@ -69,14 +71,41 @@ main = do
          listStoreClear cmdList
     
     afterActivateLeaf clrTer $ do
-        textBufferSetText buf ">> "  
+        textBufferSetText buf ">> " 
+        
+    afterActivateLeaf clrVar $ do
+        updateVariables varHist []
+        
+    afterActivateLeaf clrImp $ do
+        updateImports impHist []
     
     afterEntryActivate inp $ do
 	 command <- entryGetText inp
+	 ei <- textBufferGetEndIter buf
+         em <- textBufferCreateMark buf Nothing ei False
+	 
 	 case command of
             "" -> putStrLn "No command given"
+            
+            "@clear" -> do
+                textBufferSetText buf ">> "
+                entrySetText inp ""
+                
+            ('@':evnt) -> do
+                textBufferInsert buf ei (command ++ "\n")
+                case evnt of
+                     "clrcmd" -> listStoreClear cmdList
+                     "clrvar" -> updateVariables varHist []
+                     "clrimport" -> updateImports impHist []                     
+                     "exit" -> exitOperations cmdList
+                     "about" -> makeAboutDialog
+                     otherwise -> textBufferInsert buf ei ("Unknown Control Sequence\n")                
+                
+                textBufferInsert buf ei (">> ")
+                entrySetText inp ""
+                
             otherwise -> do 
-		putStrLn command
+		putStrLn command		
 		inputString <- return command
 		variables <- getVariables varHist
 		imports <- getImports impHist
@@ -85,7 +114,7 @@ main = do
 		variables <- return updatedVariables
 		imports <- return updatedImports
 		entrySetText inp ""
-		
+				
 		textBufferInsert buf ei (command ++ "\n" ++ result ++ "\n>> ")		 	 	 
 		scstate <- textViewScrollToMark terminal em 0.0 Nothing
 		

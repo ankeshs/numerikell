@@ -12,18 +12,28 @@ getResult str dict imports = do
   doProcess
   result <- getOutput
   let result1 = rstrip result
-  if (result1 /= "" && var /= "") 
-     then do 
-       --dict <- return ((++) dict [(var,result1)])
-       dict <- return $ updateVar dict (var,result1)
-       return (result1,dict,imports1)
-     else do 
-       dict <- return dict
-       return (result1,dict,imports1)
+  if (result1 == "")
+     then do
+       result1 <- getError
+       if (result1 == "")
+          then do
+            return (result1,dict,imports1)
+          else do
+            result1 <- return (unwords $ tail $ words $ rstrip result1)          
+            return (result1,dict,imports1)
+     else if (result1 /= "" && var /= "") 
+	  then do 
+	    --dict <- return ((++) dict [(var,result1)])
+	    dict <- return $ updateVar dict (var,result1)
+	    return (result1,dict,imports1)
+	  else do 
+	    dict <- return dict
+	    return (result1,dict,imports1)
     
 doProcess = do
     outFile <- openFile "tmp/outFile.txt" WriteMode
-    waitForProcess =<< runProcess "runhaskell" ["proc.hs"] (Just "tmp/") Nothing Nothing (Just outFile) Nothing
+    errFile <- openFile "tmp/errFile.txt" WriteMode
+    waitForProcess =<< runProcess "runhaskell" ["proc.hs"] (Just "tmp/") Nothing Nothing (Just outFile) (Just errFile)
     return ()
 
 createProgram str dict imports = do
@@ -34,6 +44,7 @@ createProgram str dict imports = do
        if (startswith "import" command) 
 	  then do
 	    imports <- return ((++) imports [command])
+	    writeFile "tmp/proc.hs" $ "main = do \n putStrLn \"\""
 	    return ("",imports)
 	  else if (startswith "@" command)
 	    then do
@@ -42,8 +53,8 @@ createProgram str dict imports = do
 	      writeFile "tmp/proc.hs" $ addImports imports ++ "main = do \n " ++ concatVars dict ++"putStrLn $ show("++ (str) ++")"
 	      return ("",imports)
      else do
-       writeFile "tmp/proc.hs" $ addImports imports ++ "main = do \n " ++ concatVars dict ++"putStrLn $ show("++ (head $ tail input) ++")"
-       return (head input,imports)
+       writeFile "tmp/proc.hs" $ addImports imports ++ "main = do \n " ++ concatVars dict ++"putStrLn $ show("++ (last input) ++")"
+       return (lstrip (rstrip (head input)),imports)
 
 concatVars list = case list of
 		       [] -> ""
@@ -63,3 +74,6 @@ getOutput = do
   logOf <- Strict.readFile "tmp/outFile.txt"
   return logOf
 
+getError = do
+  logOf <- Strict.readFile "tmp/errFile.txt"
+  return logOf

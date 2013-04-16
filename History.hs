@@ -82,4 +82,4 @@ updateImports vh impmap = do
      vsi <- textBufferGetStartIter vbuf
      vei <- textBufferGetEndIter vbuf     
      textBufferSetText vbuf (unlines $ map getImpName impmap)
-        where getImpName str = last $ words str
+        where getImpName str = unwords $ tail $ words str
