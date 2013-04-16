@@ -1,2 +1,2 @@
-main = do
-    putStrLn "Child Process"
+main = do 
+ putStrLn $ show(hello)

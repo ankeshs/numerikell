@@ -25,22 +25,18 @@ main = do
     terminal <- builderGetObject builder castToTextView "terminal"
     cmdHist <- builderGetObject builder castToTreeView "cmdHist"     
     varHist <- builderGetObject builder castToTextView "varHist"
-    impHist <- builderGetObject builder castToTextView "impHist"     
     inp <- builderGetObject builder castToEntry "inp"
-    exitMenu <- builderGetObject builder castToMenuItem "exitMenu"    
+    exitMenu <- builderGetObject builder castToMenuItem "exitMenu"
+    viewVars <- builderGetObject builder castToCheckMenuItem "viewVars"
     viewCmds <- builderGetObject builder castToCheckMenuItem "viewCmds"
-    clrCmd <- builderGetObject builder castToMenuItem "clrCmd"
-    clrTer <- builderGetObject builder castToMenuItem "clrTer"
     varBox <- builderGetObject builder castToVBox "varBox"
     cmdBox <- builderGetObject builder castToVBox "cmdBox"    
     aboutMenu <- builderGetObject builder castToMenuItem "aboutMenu"
     plotMenu <- builderGetObject builder castToMenuItem "plotMenu"
         
-    --Setting Properties and initializations    
-    
+    --Setting Properties and initializations
     textViewSetEditable terminal False    
     textViewSetEditable varHist False
-    textViewSetEditable impHist False
     buf <- textViewGetBuffer terminal    
     textBufferSetText buf ">> "
     ei <- textBufferGetEndIter buf
@@ -55,7 +51,10 @@ main = do
     afterActivateLeaf exitMenu $ do
 	 putStrLn "Exit Request"
 	 exitOperations cmdList
-		 
+	 
+    on viewVars checkMenuItemToggled $ do
+	 putStrLn "Variable View Toggled"
+	 
     on viewCmds checkMenuItemToggled $ do
 	 putStrLn "Command View Toggled"
 	 
@@ -63,14 +62,10 @@ main = do
 	 makeAboutDialog
     
     afterActivateLeaf plotMenu $ do
-         putStrLn "Plot Requested" 
-         
-    afterActivateLeaf clrCmd $ do
-         listStoreClear cmdList
+         putStrLn "Plot Requested"
     
-    afterActivateLeaf clrTer $ do
-        textBufferSetText buf ">> "  
-    
+    variables <- return []
+    imports <- return []
     afterEntryActivate inp $ do
 	 command <- entryGetText inp
 	 case command of
@@ -78,23 +73,19 @@ main = do
             otherwise -> do 
 		putStrLn command
 		inputString <- return command
-		variables <- getVariables varHist
-		imports <- getImports impHist
-		
 		(result,updatedVariables,updatedImports) <- getResult inputString variables imports
 		variables <- return updatedVariables
 		imports <- return updatedImports
 		entrySetText inp ""
 		
-		textBufferInsert buf ei (command ++ "\n" ++ result ++ "\n>> ")		 	 	 
+		textBufferInsert buf ei (command ++ "\n" ++ show (result) ++ "\n>> ")		 	 	 
 		scstate <- textViewScrollToMark terminal em 0.0 Nothing
 		
 		aVal <- listStoreAppend cmdList command
 		treeViewScrollToPoint cmdHist 0 (aVal*100)
 		trimCmdList cmdList
 		
-		updateVariables varHist	variables
-		updateImports impHist imports
+		updateVars varHist	 	 
 	 
     Model.onSelectionChanged cmdTree (oneSelection cmdList cmdTree inp)
     
@@ -103,6 +94,15 @@ main = do
     widgetShowAll appWindow
     mainGUI
     
+--Code to be modified to keep track of changing variables
+updateVars vh = do
+     vbuf <- textViewGetBuffer vh
+     vsi <- textBufferGetStartIter vbuf
+     vei <- textBufferGetEndIter vbuf
+     vcstr <- textBufferGetText vbuf vsi vei False
+     putStrLn ("Variables:\n" ++ vcstr)
+     textBufferSetText vbuf "a=10\nb=20\nc=5"
+
 --Perform operations before exiting the program
 exitOperations list = do
     saveHistory list
