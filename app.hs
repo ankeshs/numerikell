@@ -1,3 +1,18 @@
+{-
+        Licence Information
+
+        This file is part of Numerikell 1.0.0.0 Haskell Numerical
+        Software project. Please do not share, copy, edit or distribute
+        without owner's permission.  
+
+        @Contributors : Please striclty follow Haskell community convention.
+        Comment your code, use proper nomenclature for functions, variables
+        and modules.
+
+        File Specification :
+        Contributor : Mukul singh, Ankesh Kumar Singh
+-}
+
 import Interface
 import System.Exit as System
 
@@ -15,6 +30,11 @@ runInterface :: [(String, String)] -> [String] -> IO ()
     
 runInterface buf imports = do    
     inp <- getLine
+    
+    (result,dict,imports1) <- getResult inp buf imports
+    buf <- return dict
+    imports <- return imports1
+    
     case inp of
         "" -> putStrLn "No command given"         
             
@@ -34,10 +54,7 @@ runInterface buf imports = do
                 
                 otherwise -> putStrLn "Unknown Control Sequence"                            
             
-        otherwise -> do 
-            (result,dict,imports1) <- getResult inp buf imports
-            buf <- return dict
-            imports <- return imports1
+        otherwise -> do             
             putStrLn $ (++) "Result = " $ result
             putStrLn $ (++) "Variables: " $ show buf    
             putStrLn $ (++) "Imports: " $ show imports

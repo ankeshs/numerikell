@@ -1,3 +1,18 @@
+{-
+        Licence Information
+
+        This file is part of Numerikell 1.0.0.0 Haskell Numerical
+        Software project. Please do not share, copy, edit or distribute
+        without owner's permission.  
+
+        @Contributors : Please striclty follow Haskell community convention.
+        Comment your code, use proper nomenclature for functions, variables
+        and modules.
+
+        File Specification :
+        Contributor : Mukul singh
+-}
+
 module Interface where
 
 import Data.List as DataList

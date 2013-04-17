@@ -12,7 +12,11 @@
 	File Specification :
 	Contributor : Mukul singh
 -}
-module Differential where
+module Differential(
+  diff,
+  deriv
+  )
+  where
 import Data.String.Utils
 
 
@@ -41,7 +45,7 @@ instance Show Expr where
   show (Div t1 t2) = "(" ++ (show t1) ++ " / " ++ (show t2) ++ ")"
   
   
-
+-- takes an expression and evaluates its value at a specified point
 eval :: Expr -> Float -> Float
 eval (Const x) a = x
 eval (Poly x) a = evalPoly x a
@@ -59,6 +63,7 @@ eval (Product f g) a =  (eval f a) * (eval g a)
 eval (Div f g) a =  (eval f a) / (eval g a)
 
 
+-- evaluate a polynomial function at a specified point
 evalPoly :: Polynomial -> Float -> Float
 evalPoly [a] x = a
 evalPoly a x = eval' (tail y) (head y) x
@@ -70,7 +75,7 @@ eval' [a]    acc x = a + acc*x
 eval' (a:as) acc x = eval' as (x*acc+a) x
 
 
-
+--takes an expression and gives its derivative at a specified point
 diff :: Expr -> Float -> Float
 diff (Const x) a = 0
 diff (Poly x) a = evalPoly (diffPoly x) a
@@ -87,27 +92,38 @@ diff (Diff f g) a = diffrenceRule f g a
 diff (Product f g) a = productRule f g a 
 diff (Div f g) a = divRule f g a 
 
+--implements sum rule of differentiation (f+g)' = f' + g'
 sumRule :: Expr -> Expr -> Float -> Float
 sumRule f g a = (diff f a) + (diff g a)
 
+--implements difference rule of differentiation (f-g)' = f' - g'
 diffrenceRule :: Expr -> Expr -> Float -> Float
 diffrenceRule f g a = (diff f a) - (diff g a)
 
+--implements product rule of differentiation (f*g)' = f*g' + g*f'
 productRule :: Expr -> Expr -> Float -> Float
 productRule f g a = (eval f a) * (diff g a) + (eval g a) * (diff f a)
 
+--implements division rule of differentiation (f/g)' = (f'g - g'f)/g^2
 divRule :: Expr -> Expr -> Float -> Float
 divRule f g a = ((diff f a) * (eval g a) - (diff g a) * (eval f a)) / ((eval g a)* (eval g a))
 
+-- to find the derivative of a polynomial function
 diffPoly :: Polynomial -> Polynomial
 diffPoly a = diffPoly' (tail a) 1
 
--- helping function for deriv
+-- helping function for diffPoly
 diffPoly' :: Polynomial -> Float -> Polynomial
 diffPoly' [x] i = [x*i]
 diffPoly' (x:xs) i = (x*i) : (diffPoly' xs (i+1))
 
+--takes an expression and gives its derivative as an expression string
+deriv :: Expr -> String
+deriv e = (replace "\"" "" str)
+  where str = deriv' e
 
+
+--helping function for deriv
 deriv' :: Expr -> String
 deriv' (Const _) = show(Const 0)
 deriv' (Poly x) = show(diffPoly x)
@@ -122,6 +138,3 @@ deriv' (Log x) = "1/(" ++ show(x) ++ ") * " ++ (deriv' x)
 deriv' (Sum f g) = "(" ++ (deriv' f) ++ " + " ++ (deriv' g) ++ ")"
 deriv' (Product f g) = "(" ++ show(f) ++ " * " ++ (deriv' g) ++ " + " ++ (deriv' f) ++ " * " ++ show(g) ++ ")"
 
-deriv :: Expr -> String
-deriv e = (replace "\"" "" str)
-  where str = deriv' e

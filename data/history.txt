@@ -1,0 +1,7 @@
+a=90
+b=10
+c=90+b
+sin c
+a=10
+import Equation
+eval [1,2] 4

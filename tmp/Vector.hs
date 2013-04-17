@@ -13,7 +13,19 @@
 	Contributor : Dipendra K. Misra (dipendrakumarmisra@gmail.com), Mukul Singh, Satyendra Patel
 -}
 
-module Vector where
+module Vector (
+  dot,
+  sub,
+  add,
+  app,
+  size,
+  i,
+  j,
+  k,
+  cross,
+  norm,
+  unity
+  )where
 
 type Vector = [Double]
 

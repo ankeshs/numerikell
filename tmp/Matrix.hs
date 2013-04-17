@@ -12,7 +12,30 @@
 	File Specification :
 	Contributor : Dipendra K. Misra (dipendrakumarmisra@gmail.com), Mukul Singh
 -}
-module Matrix where
+module Matrix (
+  size,
+  zero,
+  rowMajor,
+  colMajor,
+  min2D,
+  size2D,
+  valid2D,
+  det,
+  transpose,
+  coli,
+  rowi,
+  mul,
+  add,
+  sub,
+  app,
+  foldInit,
+  foldl2D,
+  foldlAll,
+  foldr2D,
+  foldlInt,
+  maxCol
+  )
+  where
 
 
 -- takes a list and returns the number of elements in the list
@@ -65,6 +88,7 @@ det :: [[Int]] -> Int
 det [] = 0
 det (x:xs) = deti x xs 0
 
+-- helping function for det
 deti :: [Int] -> [[Int]] -> Int -> Int
 deti x  []  _              =  x !! 0
 deti x  xs i 

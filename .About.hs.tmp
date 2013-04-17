@@ -6,7 +6,7 @@ import Graphics.UI.Gtk.Builder
 
 makeAboutDialog :: IO ()
 
--- Make About Dialog
+-- Make About Dialog on request
 
 makeAboutDialog = do
     initGUI

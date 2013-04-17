@@ -1,2 +1,13 @@
 
-proc.hs:2:19: Not in scope: `q'
+proc.hs:3:85:
+    Couldn't match expected type `IO ()' with actual type `a0 -> a0'
+    In the second argument of `(+)', namely `cos'
+    In the expression:
+      plotFunc
+        [Title "", XLabel "", YLabel ""] (([0, 0.1, 10]) :: [Float]) sin
+      + cos
+    In an equation for `main':
+        main
+          = plotFunc
+              [Title "", XLabel "", YLabel ""] (([0, 0.1, 10]) :: [Float]) sin
+            + cos

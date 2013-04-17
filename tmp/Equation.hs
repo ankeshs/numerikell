@@ -12,7 +12,21 @@
 	File Specification :
 	Contributor : Dipendra K. Misra (dipendrakumarmisra@gmail.com), Mukul singh, Satyendra Patel
 -}
-module Equation where
+module Equation (
+  eval,
+  deg,
+  root1,
+  root2,
+  deriv,
+  add,
+  sub,
+  mul,
+  quotL,
+  newRaph,
+  newRaph1,
+  scalar
+  )
+  where
 
 type Polynomial = [Double]
 
@@ -27,6 +41,7 @@ eval' :: Polynomial -> Double -> Double -> Double
 eval' [a]    acc x = a + acc*x
 eval' (a:as) acc x = eval' as (x*acc+a) x
 
+--gives the degree of a polynomial
 deg :: Polynomial -> Int
 deg x = length x -1
 
