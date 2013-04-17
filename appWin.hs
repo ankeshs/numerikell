@@ -16,6 +16,8 @@ import System.IO
 import Data.String.Utils
 import Control.Monad
 
+main :: IO ()
+
 main = do
     initGUI
     builder <- builderNew
@@ -32,6 +34,7 @@ main = do
     inpComp <- builderGetObject builder castToEntryCompletion "inpComp"
     exitMenu <- builderGetObject builder castToMenuItem "exitMenu"    
     viewCmds <- builderGetObject builder castToCheckMenuItem "viewCmds"
+    fullScr <- builderGetObject builder castToCheckMenuItem "fullScr"
     clrCmd <- builderGetObject builder castToMenuItem "clrCmd"
     clrTer <- builderGetObject builder castToMenuItem "clrTer"
     clrVar <- builderGetObject builder castToMenuItem "clrVar"
@@ -65,6 +68,12 @@ main = do
 		 
     on viewCmds checkMenuItemToggled $ do
 	 putStrLn "Command View Toggled"    
+	 
+    on fullScr checkMenuItemToggled $ do
+         slctd <- checkMenuItemGetActive fullScr
+         case slctd of
+            True -> windowFullscreen appWindow
+            False -> windowUnfullscreen appWindow  
 	 
     afterActivateLeaf aboutMenu $ do
 	 makeAboutDialog
@@ -143,6 +152,8 @@ main = do
     mainGUI
     
 --Perform operations before exiting the program
+exitOperations :: ListStore String -> IO ()
+
 exitOperations list = do
     saveHistory list
     mainQuit

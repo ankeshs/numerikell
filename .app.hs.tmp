@@ -41,7 +41,8 @@ runInterface buf imports = do
             putStrLn $ (++) "Result = " $ result
             putStrLn $ (++) "Variables: " $ show buf    
             putStrLn $ (++) "Imports: " $ show imports
-        
+    
+    putStr ">> "
     runInterface buf imports
 
 -- Write about program in plain text    

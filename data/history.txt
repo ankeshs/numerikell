@@ -1,8 +1,0 @@
-import Data.List
-num=10
-w=num/2
-sin w
-import Equation
-eval [4] 2
-head [1,2,3]
-a=head [1,2,3]

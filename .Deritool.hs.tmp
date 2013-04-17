@@ -10,9 +10,6 @@ import Graphics.UI.Gtk
 import Graphics.UI.Gtk.Glade
 import Graphics.UI.Gtk.Builder
 
--- Generate graphical derivative toolbox
-deriComp :: IO ()
-
 deriComp = do
     initGUI
     builder <- builderNew

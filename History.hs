@@ -1,4 +1,13 @@
-module History where
+module History (
+    oneSelection,
+    renderTree,
+    readHistory,
+    saveHistory,
+    getVariables,
+    updateVariables,
+    getImports,
+    trimCmdList,
+    updateImports) where
 
 import Graphics.UI.Gtk
 import Graphics.UI.Gtk.ModelView as Model
@@ -77,6 +86,9 @@ getVarTuple :: String -> (String, String)
 getVarTuple l = (head t, last t)
     where t = split " = " l
     
+-- Update the current set of variables to the environment   
+updateVariables
+  :: TextViewClass self => self -> [(String, String)] -> IO ()
     
 updateVariables vh varmap = do    
      vbuf <- textViewGetBuffer vh
@@ -85,6 +97,9 @@ updateVariables vh varmap = do
      textBufferSetText vbuf (unlines $ map glueVarTuple varmap)
          where glueVarTuple (a,b) = a ++ " = " ++ b     
 
+--Get current set of imported libraries from the environment
+getImports :: TextViewClass self => self -> IO [String]
+         
 getImports vh = do
      vbuf <- textViewGetBuffer vh
      vsi <- textBufferGetStartIter vbuf
@@ -93,6 +108,9 @@ getImports vh = do
      
      impmap <- return( lines vcstr )
      return $ map ( (++) "import ") impmap 
+     
+--Update imported libraries to the environment    
+updateImports :: TextViewClass self => self -> [String] -> IO ()
      
 updateImports vh impmap = do
      vbuf <- textViewGetBuffer vh
