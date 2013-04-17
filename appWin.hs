@@ -7,13 +7,14 @@ import About
 import History
 import Interface
 import Plot
+import Deritool
 import Graphics.UI.Gtk.ModelView as Model
 import Data.List as DataList
 import System.Process
 import System.IO.Strict as Strict
 import System.IO
 import Data.String.Utils
-
+import Control.Monad
 
 main = do
     initGUI
@@ -28,6 +29,7 @@ main = do
     varHist <- builderGetObject builder castToTextView "varHist"
     impHist <- builderGetObject builder castToTextView "impHist"     
     inp <- builderGetObject builder castToEntry "inp"
+    inpComp <- builderGetObject builder castToEntryCompletion "inpComp"
     exitMenu <- builderGetObject builder castToMenuItem "exitMenu"    
     viewCmds <- builderGetObject builder castToCheckMenuItem "viewCmds"
     clrCmd <- builderGetObject builder castToMenuItem "clrCmd"
@@ -38,6 +40,7 @@ main = do
     cmdBox <- builderGetObject builder castToVBox "cmdBox"    
     aboutMenu <- builderGetObject builder castToMenuItem "aboutMenu"
     plotMenu <- builderGetObject builder castToMenuItem "plotMenu"
+    derMenu <- builderGetObject builder castToMenuItem "derTool"
         
     --Setting Properties and initializations    
     
@@ -52,6 +55,7 @@ main = do
     cmdList <- listStoreNew cmdArray    
     renderTree cmdHist cmdList
     cmdTree <- Model.treeViewGetSelection cmdHist
+        
     Model.treeSelectionSetMode cmdTree  SelectionSingle    
     
     --Events
@@ -60,7 +64,7 @@ main = do
 	 exitOperations cmdList
 		 
     on viewCmds checkMenuItemToggled $ do
-	 putStrLn "Command View Toggled"
+	 putStrLn "Command View Toggled"    
 	 
     afterActivateLeaf aboutMenu $ do
 	 makeAboutDialog
@@ -68,6 +72,10 @@ main = do
     afterActivateLeaf plotMenu $ do
          putStrLn "Plot Requested" 
          plotComp
+         
+    afterActivateLeaf derMenu $ do
+         putStrLn "Derivative Toolbox Requested" 
+         deriComp
          
     afterActivateLeaf clrCmd $ do
          listStoreClear cmdList

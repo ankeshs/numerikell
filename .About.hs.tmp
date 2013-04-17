@@ -1,8 +1,12 @@
-module About where
+module About (makeAboutDialog) where
 
 import Graphics.UI.Gtk
 import Graphics.UI.Gtk.Glade
 import Graphics.UI.Gtk.Builder
+
+makeAboutDialog :: IO ()
+
+-- Make About Dialog
 
 makeAboutDialog = do
     initGUI

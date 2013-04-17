@@ -206,6 +206,15 @@ Satyendra Patel</property>
                         <property name="use_underline">True</property>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkMenuItem" id="derTool">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Derivative</property>
+                        <property name="use_underline">True</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -580,4 +589,5 @@ Satyendra Patel</property>
       <action-widget response="0">button2</action-widget>
     </action-widgets>
   </object>
+  <object class="GtkEntryCompletion" id="inpComp"/>
 </interface>

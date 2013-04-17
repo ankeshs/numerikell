@@ -72,8 +72,7 @@ getVariables vh = do
           
      varmap <- return( lines vcstr )
      return $ map getVarTuple varmap
-
-getVarTuple :: String -> (String, String)     
+          
 getVarTuple l = (head t, last t)
     where t = split " = " l
     
