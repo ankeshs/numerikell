@@ -1,7 +1,16 @@
-a=90
-b=10
-c=90+b
-sin c
 a=10
+sin a
+sin (a+10)
+import Graph as G
+foldl (\acc v -> insert acc v) Empty [3,2,1,4,5]
+let a = 10
+import Equation as E
+newRaph1.deriv $ [-8,12,-6,1]
+newRaph1 . deriv $ [-8,12,-6,1]
+E.newRaph1 . E.deriv $ [-8,12,-6,1]
 import Equation
-eval [1,2] 4
+newRaph1.deriv $ [-8,12,-6,1]
+newRaph1 . deriv $ [-8,12,-6,1]
+import Matrix
+import Equation
+newRaph1.deriv $ [-8,12,-6,1]

@@ -1,3 +1,3 @@
-import Graphics.Gnuplot.Simple
-import Data.List
-main = plotFunc [Title "" , XLabel "" , YLabel "" ] ( ([0,0.1,10]) ::[Float]) sin + cos
+import Equation
+main = do 
+ putStrLn $ show(newRaph1.deriv $ [-8,12,-6,1])

@@ -1,31 +1,52 @@
-{-
-	Licence Information
-
-	This file is part of Numerikell 1.0.0.0 Haskell Numerical
-	Software project. Please do not share, copy, edit or distribute
-	without owner's permission.  
-
-	@Contributors : Please striclty follow Haskell community convention.
-	Comment your code, use proper nomenclature for functions, variables
-	and modules.
-
-	File Specification :
-	Contributor : Mukul singh
--}
-module Differential(
+-- | module Differential provides functions for finding the derivatives of standard one variable functions
+-- functions implemented currently are constant, polynomial, sin, cos, tan, cosec, sec, cot, log, exponential and their compositions.
+-- Also, the functions formed by addition, subtraction, product and division of these functions are allowed
+module Differential
+  (
+  -- * Types
+  -- ** Polynomial type
+  Polynomial,
+  -- * Data Types
+  -- ** Expr
+  Expr(Const,Poly,Sin,Cos,Tan,Cosec,Sec,Cot,Log,Exp,Sum,Product,Diff,Div),
+  -- * Funtions
   diff,
-  deriv
-  )
-  where
+  deriv,
+  )where
 import Data.String.Utils
 
+type Polynomial = [Float] -- ^ List of float elements [1,3,2] means 1 + 3x + 2x^2
 
-type Polynomial = [Float]
-
-data Expr = Const Float | Poly Polynomial
-	  | Sin Expr | Cos Expr | Tan Expr | Cosec Expr | Sec Expr | Cot Expr
-	  | Log Expr | Exp Expr
-	  | Sum Expr Expr | Product Expr Expr | Diff Expr Expr | Div Expr Expr
+-- |Expr data type contains expressions for the mathematical expressions
+data Expr 
+  -- | To define an expression as a constant float number
+  = Const Float
+  -- | To define an expression as a polynomial
+  | Poly Polynomial
+  -- | To define an expression as Sin function
+  | Sin Expr 
+  -- | To define an expression as Cos function
+  | Cos Expr 
+  -- | To define an expression as Tan function
+  | Tan Expr 
+  -- | To define an expression as Cosec function
+  | Cosec Expr 
+  -- | To define an expression as Sec function
+  | Sec Expr 
+  -- | To define an expression as Cot function
+  | Cot Expr
+  -- | To define an expression as Log function
+  | Log Expr 
+  -- | To define an expression as Exponential function
+  | Exp Expr
+  -- | To define an expression as a sum of two expressions
+  | Sum Expr Expr 
+  -- | To define an expression as a product of two expressions
+  | Product Expr Expr 
+  -- | To define an expression as a difference of two expressions
+  | Diff Expr Expr 
+  -- | To define an expression as a divison of two expressions
+  | Div Expr Expr
 	  
 	  
 instance Show Expr where
@@ -45,8 +66,8 @@ instance Show Expr where
   show (Div t1 t2) = "(" ++ (show t1) ++ " / " ++ (show t2) ++ ")"
   
   
--- takes an expression and evaluates its value at a specified point
-eval :: Expr -> Float -> Float
+
+eval :: Expr -> Float -> Float		
 eval (Const x) a = x
 eval (Poly x) a = evalPoly x a
 eval (Sin x) a = (sin (eval x a))
@@ -63,7 +84,6 @@ eval (Product f g) a =  (eval f a) * (eval g a)
 eval (Div f g) a =  (eval f a) / (eval g a)
 
 
--- evaluate a polynomial function at a specified point
 evalPoly :: Polynomial -> Float -> Float
 evalPoly [a] x = a
 evalPoly a x = eval' (tail y) (head y) x
@@ -75,8 +95,10 @@ eval' [a]    acc x = a + acc*x
 eval' (a:as) acc x = eval' as (x*acc+a) x
 
 
---takes an expression and gives its derivative at a specified point
-diff :: Expr -> Float -> Float
+-- |The 'diff' function takes an expression and a point and evaluates its differential at the given point
+diff :: Expr 		-- ^ Input Expression
+  -> Float 		-- ^ value where derivative is needed
+  -> Float		-- ^ return value of derivative
 diff (Const x) a = 0
 diff (Poly x) a = evalPoly (diffPoly x) a
 diff (Sin x) a = (eval (Cos x) a) * (diff x a)
@@ -92,38 +114,27 @@ diff (Diff f g) a = diffrenceRule f g a
 diff (Product f g) a = productRule f g a 
 diff (Div f g) a = divRule f g a 
 
---implements sum rule of differentiation (f+g)' = f' + g'
 sumRule :: Expr -> Expr -> Float -> Float
 sumRule f g a = (diff f a) + (diff g a)
 
---implements difference rule of differentiation (f-g)' = f' - g'
 diffrenceRule :: Expr -> Expr -> Float -> Float
 diffrenceRule f g a = (diff f a) - (diff g a)
 
---implements product rule of differentiation (f*g)' = f*g' + g*f'
 productRule :: Expr -> Expr -> Float -> Float
 productRule f g a = (eval f a) * (diff g a) + (eval g a) * (diff f a)
 
---implements division rule of differentiation (f/g)' = (f'g - g'f)/g^2
 divRule :: Expr -> Expr -> Float -> Float
 divRule f g a = ((diff f a) * (eval g a) - (diff g a) * (eval f a)) / ((eval g a)* (eval g a))
 
--- to find the derivative of a polynomial function
 diffPoly :: Polynomial -> Polynomial
 diffPoly a = diffPoly' (tail a) 1
 
--- helping function for diffPoly
+-- helping function for deriv
 diffPoly' :: Polynomial -> Float -> Polynomial
 diffPoly' [x] i = [x*i]
 diffPoly' (x:xs) i = (x*i) : (diffPoly' xs (i+1))
 
---takes an expression and gives its derivative as an expression string
-deriv :: Expr -> String
-deriv e = (replace "\"" "" str)
-  where str = deriv' e
 
-
---helping function for deriv
 deriv' :: Expr -> String
 deriv' (Const _) = show(Const 0)
 deriv' (Poly x) = show(diffPoly x)
@@ -138,3 +149,9 @@ deriv' (Log x) = "1/(" ++ show(x) ++ ") * " ++ (deriv' x)
 deriv' (Sum f g) = "(" ++ (deriv' f) ++ " + " ++ (deriv' g) ++ ")"
 deriv' (Product f g) = "(" ++ show(f) ++ " * " ++ (deriv' g) ++ " + " ++ (deriv' f) ++ " * " ++ show(g) ++ ")"
 
+-- |The 'deriv' function takes an expression gives its derivative in symbolic notation
+-- for example, for sin, it gives cos
+deriv :: Expr 		-- ^ Input Expression
+  -> String		-- ^ Return derivative in the form of a string which can be evaluated.
+deriv e = (replace "\"" "" str)
+  where str = deriv' e

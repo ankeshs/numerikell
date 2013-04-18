@@ -148,8 +148,10 @@ main = do
 		variables <- return updatedVariables
 		imports <- return updatedImports
 		entrySetText inp ""
-				
-		textBufferInsert buf ei (command ++ "\n" ++ result ++ "\n>> ")		 	 	 
+		
+		case result of
+                    "" -> textBufferInsert buf ei (command ++ "\n>> ")
+                    otherwise -> textBufferInsert buf ei (command ++ "\n" ++ result ++ "\n>> ")		 	 	 
 		scstate <- textViewScrollToMark terminal em 0.0 Nothing
 		
 		aVal <- listStoreAppend cmdList command

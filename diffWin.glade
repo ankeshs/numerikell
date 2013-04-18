@@ -275,7 +275,7 @@
               <object class="GtkLabel" id="label5">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Numerical Derivative</property>
+                <property name="label" translatable="yes">Derivative Value</property>
               </object>
               <packing>
                 <property name="expand">False</property>

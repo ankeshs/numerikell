@@ -1,29 +1,50 @@
-{-
-	Licence Information
-
-	This file is part of Numerikell 1.0.0.0 Haskell Numerical
-	Software project. Please do not share, copy, edit or distribute
-	without owner's permission.  
-
-	@Contributors : Please striclty follow Haskell community convention.
-	Comment your code, use proper nomenclature for functions, variables
-	and modules.
-
-	File Specification :
-	Contributor : Mukul singh
--}
+-- | module Integrals provides the functionality to find the definite integral of some standard functions
+-- functions implemented currently are constant, polynomial, sin, cos, tan, cosec, sec, cot, log, exponential and their compositions.
+-- Also, the functions formed by addition, subtraction, product and division of these functions are allowed
 module Integrals (
+  -- * Types
+  -- ** Polynomial type
+  Polynomial,
+  -- * Data Types
+  -- ** Expr 
+  Expr(Const,Poly,Sin,Cos,Tan,Cosec,Sec,Cot,Log,Exp,Sum,Product,Diff,Div),
+  -- * Funtions
   integrate
   )
   where
 
-type Polynomial = [Float]
+type Polynomial = [Float] -- ^ List of float elements [1,3,2] means 1 + 3x + 2x^2
 
-data Expr = Const Float | Poly Polynomial
-	  | Sin Expr | Cos Expr | Tan Expr | Cosec Expr | Sec Expr | Cot Expr
-	  | Log Expr | Exp Expr
-	  | Sum Expr Expr | Product Expr Expr | Diff Expr Expr | Div Expr Expr
-	  
+-- |Expr data type contains expressions for the mathematical expressions
+data Expr 
+  -- | To define an expression as a constant float number
+  = Const Float
+  -- | To define an expression as a polynomial
+  | Poly Polynomial
+  -- | To define an expression as Sin function
+  | Sin Expr 
+  -- | To define an expression as Cos function
+  | Cos Expr 
+  -- | To define an expression as Tan function
+  | Tan Expr 
+  -- | To define an expression as Cosec function
+  | Cosec Expr 
+  -- | To define an expression as Sec function
+  | Sec Expr 
+  -- | To define an expression as Cot function
+  | Cot Expr
+  -- | To define an expression as Log function
+  | Log Expr 
+  -- | To define an expression as Exponential function
+  | Exp Expr
+  -- | To define an expression as a sum of two expressions
+  | Sum Expr Expr 
+  -- | To define an expression as a product of two expressions
+  | Product Expr Expr 
+  -- | To define an expression as a difference of two expressions
+  | Diff Expr Expr 
+  -- | To define an expression as a divison of two expressions
+  | Div Expr Expr	  
 	  
 instance Show Expr where
   show (Const x) = show x
@@ -41,7 +62,7 @@ instance Show Expr where
   show (Product t1 t2) = "(" ++ (show t1) ++ " * " ++ (show t2) ++ ")"
   show (Div t1 t2) = "(" ++ (show t1) ++ " / " ++ (show t2) ++ ")"
   
---evaluates value of an expression at a specified point
+
 eval :: Expr -> Float -> Float
 eval (Const x) a = x
 eval (Poly x) a = evalPoly x a
@@ -58,7 +79,7 @@ eval (Diff f g) a = (eval f a) - (eval g a)
 eval (Product f g) a =  (eval f a) * (eval g a)
 eval (Div f g) a =  (eval f a) / (eval g a)
 
---evaluates value of a polynomial function at a specified point
+
 evalPoly :: Polynomial -> Float -> Float
 evalPoly [a] x = a
 evalPoly a x = eval' (tail y) (head y) x
@@ -70,13 +91,16 @@ eval' [a]    acc x = a + acc*x
 eval' (a:as) acc x = eval' as (x*acc+a) x
 
 
---takes an expression with lower and upper limits, and gives the integration of the expression from lower limit to upper limit
-integrate :: Expr -> Float -> Float -> Float
+-- | The integrate function finds the definite integral of the functions, using trapezoid method
+integrate :: Expr 	-- ^ Input Expression
+  -> Float 		-- ^ lower limit of integration
+  -> Float 		-- ^ upper limit of integration
+  -> Float		-- ^ return value of the integration
 integrate expr a0 a1 = if (a0==a1) 
 			  then 0 
 			  else integrate' expr a0 ((a1-a0)/100.0) 1
 
---helping fucntion for integrate			  
+
 integrate' :: Expr -> Float -> Float -> Float -> Float
 integrate' expr a0 h n = 
   if n==100
